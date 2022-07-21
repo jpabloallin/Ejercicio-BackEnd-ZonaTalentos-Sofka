@@ -4,7 +4,7 @@ import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
 
-import static com.ejercicio.zonadetalentos.config.RandomAlphanumeric.randomAlphanumericNumber;
+import static com.ejercicio.zonadetalentos.config.RandomNumber.randomAlphanumericNumber;
 
 @Data
 @AllArgsConstructor
