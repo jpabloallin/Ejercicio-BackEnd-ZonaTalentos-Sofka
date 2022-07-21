@@ -6,18 +6,23 @@ import com.ejercicio.zonadetalentos.repositories.ITeamRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Mono;
 
+import javax.validation.Valid;
+
 @Service
+@Validated
 @RequiredArgsConstructor
 @Slf4j
+
 public class CreateTeamUseCase {
 
     private final ITeamRepository teamRepository;
     private final TeamMapper teamMapper;
 
-    public Mono<TeamDTO> apply(TeamDTO teamDTO) {
-        log.info("\n***** New team created. Id: {} *****\n", teamDTO.getId());
+    public Mono<TeamDTO> apply(@Valid TeamDTO teamDTO) {
+        log.info("\n***** New team created. *****\n");
         return  teamRepository
                 .save(teamMapper
                         .convertDtoToEntity()

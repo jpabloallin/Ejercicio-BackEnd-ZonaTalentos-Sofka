@@ -8,8 +8,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import reactor.core.publisher.Mono;
 
 import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
 import static org.springframework.web.reactive.function.server.RequestPredicates.accept;
@@ -26,6 +28,10 @@ public class PostCyclistRouter {
                         .flatMap(cyclistDTO -> ServerResponse.status(HttpStatus.CREATED)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .bodyValue(cyclistDTO))
-        );
+                        .onErrorResume(e -> Mono.just("Error: " + e.getMessage())
+                                .flatMap(s -> ServerResponse
+                                        .status(HttpStatus.BAD_REQUEST)
+                                        .contentType(MediaType.TEXT_PLAIN)
+                                        .bodyValue(s))));
     }
 }

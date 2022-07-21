@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import reactor.core.publisher.Mono;
 
 import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
 import static org.springframework.web.reactive.function.server.RequestPredicates.accept;
@@ -23,7 +24,10 @@ public class PostTeamRouter {
                         .flatMap(createTeamUseCase::apply)
                         .flatMap(teamDTO -> ServerResponse.status(HttpStatus.CREATED)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .bodyValue(teamDTO))
-        );
+                                .bodyValue(teamDTO)).onErrorResume(e -> Mono.just("Error: " + e.getMessage())
+                                .flatMap(s -> ServerResponse
+                                        .status(HttpStatus.BAD_REQUEST)
+                                        .contentType(MediaType.TEXT_PLAIN)
+                                        .bodyValue(s))));
     }
 }

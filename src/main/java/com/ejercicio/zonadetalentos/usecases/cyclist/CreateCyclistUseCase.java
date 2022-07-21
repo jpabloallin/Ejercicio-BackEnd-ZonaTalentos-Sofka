@@ -6,9 +6,14 @@ import com.ejercicio.zonadetalentos.repositories.ICyclistRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Mono;
 
+import javax.validation.Valid;
+import javax.validation.constraints.AssertTrue;
+
 @Service
+@Validated
 @RequiredArgsConstructor
 @Slf4j
 public class CreateCyclistUseCase {
@@ -16,8 +21,9 @@ public class CreateCyclistUseCase {
     private final ICyclistRepository cyclistRepository;
     private final CyclistMapper cyclistMapper;
 
-    public Mono<CyclistDTO> apply(CyclistDTO cyclistDTO) {
-        log.info("\n***** New cyclist created. Id: {} *****\n", cyclistDTO.getId());
+    @AssertTrue
+    public Mono<CyclistDTO> apply(@Valid CyclistDTO cyclistDTO) {
+        log.info("\n***** New cyclist created. *****\n");
         return  cyclistRepository
                 .save(cyclistMapper
                         .convertDtoToEntity()
